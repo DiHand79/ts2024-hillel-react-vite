@@ -1,7 +1,40 @@
+import { useEffect, useState } from 'react';
+import TodoList from './components/TodoList';
+import { ITodo } from './types';
 import '../sass/app.sass';
+import TodoForm from './components/TodoForm';
+
+const URL = 'http://localhost:3000/todos';
 
 function App() {
-  const onClick = () => console.log('Click test');
+  let [items, setItems] = useState<ITodo[]>([]);
+
+  useEffect(() => {
+    fetch(URL)
+      .then((data) => data.json())
+      .then((json) => setItems(json));
+  }, []);
+
+  const handleCreate = (todo: ITodo) => {
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(todo),
+    })
+      .then((res) => res.json())
+      .then((json) => setItems((prev) => [...prev, json]));
+  };
+
+  const handleEdit = (id: string) => console.log('Click edit ', id);
+
+  const handleDelete = (id: string) => {
+    fetch(`${URL}/${id}`, { method: 'DELETE' }).then(() => setItems((prev) => prev.filter((el) => el.id !== id)));
+    // fetch(`${URL}/${id}`, { method: 'DELETE' })
+    // .then((res) => res.json())
+    // .then((json) => setItems(json));
+  };
 
   return (
     <>
@@ -17,7 +50,6 @@ function App() {
           </small>
         </h1>
         <div className='links'>
-          <button onClick={onClick}>Click Me...</button>
           <button>
             <a
               href='https://github.com/DiHand79/typescript-course-2024-01'
@@ -36,6 +68,12 @@ function App() {
           </button>
         </div>
       </div>
+      <TodoList
+        items={items}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+      />
+      <TodoForm onCreate={handleCreate} />
       <footer>
         <h3>
           <a
