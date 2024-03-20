@@ -6,14 +6,15 @@ export interface ITodo {
 export interface ITodoProps {
   item: ITodo;
   onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
+  onEdit: (todo: ITodo) => void;
 }
 export interface ITodoListProps {
   items: ITodo[];
   onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
+  onEdit: (todo: ITodo) => void;
 }
 
 export interface ITodoFormCreate {
-  onCreate: (todo: ITodo) => void;
+  onSubmit: (todo: ITodo) => void;
+  initData: ITodo;
 }

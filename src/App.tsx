@@ -5,9 +5,11 @@ import '../sass/app.sass';
 import TodoForm from './components/TodoForm';
 
 const URL = 'http://localhost:3000/todos';
+const initDataTodo = { title: '', description: '', id: Math.random().toString(16).slice(-13) + Math.random().toString(16).slice(-13) };
 
 function App() {
-  let [items, setItems] = useState<ITodo[]>([]);
+  const [items, setItems] = useState<ITodo[]>([]);
+  const [todoEdit, setTodoEdit] = useState<ITodo | null>(null);
 
   useEffect(() => {
     fetch(URL)
@@ -27,13 +29,29 @@ function App() {
       .then((json) => setItems((prev) => [...prev, json]));
   };
 
-  const handleEdit = (id: string) => console.log('Click edit ', id);
+  const handleEdit = (todo: ITodo) => {
+    console.log('Click edit ', todo);
+    setTodoEdit(todo);
+    // handleTodoUpdate(todo);
+  };
+
+  const handleTodoUpdate = (todo: ITodo) => {
+    fetch(`${URL}/${todo.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(todo),
+    }).then(() => {
+      setItems((prev) => prev.map((el) => (el.id === todo.id ? todo : el)));
+      setTodoEdit(null);
+    });
+    // .then((res) => res.json())
+    // .then((updatedTodo) => {
+    // setItems((prev) => prev.map((el) => (el.id === todo.id ? updatedTodo : el)));
+    // });
+  };
 
   const handleDelete = (id: string) => {
     fetch(`${URL}/${id}`, { method: 'DELETE' }).then(() => setItems((prev) => prev.filter((el) => el.id !== id)));
-    // fetch(`${URL}/${id}`, { method: 'DELETE' })
-    // .then((res) => res.json())
-    // .then((json) => setItems(json));
   };
 
   return (
@@ -73,7 +91,18 @@ function App() {
         onDelete={handleDelete}
         onEdit={handleEdit}
       />
-      <TodoForm onCreate={handleCreate} />
+      {!todoEdit && (
+        <TodoForm
+          onSubmit={handleCreate}
+          initData={initDataTodo}
+        />
+      )}
+      {todoEdit && (
+        <TodoForm
+          onSubmit={handleTodoUpdate}
+          initData={todoEdit}
+        />
+      )}
       <footer>
         <h3>
           <a

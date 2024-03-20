@@ -2,9 +2,10 @@ import { useState } from 'react';
 import '../../sass/itemAddNewForm.sass';
 import { ITodo, ITodoFormCreate } from '../types';
 
-const initData = { title: '', description: '', id: Math.random().toString(16).padStart(32) };
 export default function TodoForm(props: ITodoFormCreate) {
-  const { onCreate } = props;
+  const { onSubmit, initData } = props;
+  console.log('initData: ', initData); // twice???
+
   const [newItem, setNewItem] = useState<ITodo>(initData);
 
   const handleChange: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -17,10 +18,10 @@ export default function TodoForm(props: ITodoFormCreate) {
   const handleSubmit: React.FormEventHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    onCreate(newItem);
+    onSubmit(newItem);
     setNewItem({
       ...initData,
-      id: Math.random().toString(16).padStart(32),
+      id: Math.random().toString(16).slice(-13) + Math.random().toString(16).slice(-13),
     });
   };
 
@@ -35,7 +36,7 @@ export default function TodoForm(props: ITodoFormCreate) {
         <input
           type='text'
           name='title'
-          placeholder='Enter title.'
+          // placeholder='Enter title.'
           value={newItem.title}
           onChange={handleChange}
           required
@@ -46,13 +47,13 @@ export default function TodoForm(props: ITodoFormCreate) {
         <input
           type='text'
           name='description'
-          placeholder='Enter description.'
+          // placeholder='Enter description.'
           value={newItem.description}
           onChange={handleChange}
           required
         />
       </div>
-      <button>Save</button>
+      <button>{initData.title.length ? 'Update' : 'Add'}</button>
     </form>
   );
 }

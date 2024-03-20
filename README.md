@@ -1,5 +1,15 @@
 # React + TypeScript + Vite
 
+- for run use 2 terminals:
+
+* first for JSON server : npm run server
+* second for TS React app : npm run dev
+
+All address you will see in consoles
+
+//
+//
+//
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

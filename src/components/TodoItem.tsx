@@ -10,7 +10,7 @@ export default function TodoItem(props: ITodoProps) {
       <span className='itemDescription'>{item.description}</span>
       <button
         className='itemButton'
-        onClick={() => onEdit(item.id)}
+        onClick={() => onEdit(item)}
       >
         📝
       </button>
