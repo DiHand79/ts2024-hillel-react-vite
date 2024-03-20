@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../sass/itemAddNewForm.sass';
 import { ITodo, ITodoFormCreate } from '../types';
 
 export default function TodoForm(props: ITodoFormCreate) {
   const { onSubmit, initData } = props;
-  console.log('initData: ', initData); // twice???
+  // console.log('initData: ', initData); // twice???
 
   const [newItem, setNewItem] = useState<ITodo>(initData);
+
+  useEffect(() => {
+    setNewItem(initData);
+  }, [initData]);
 
   const handleChange: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLFormElement>) => {
     setNewItem((prev) => ({

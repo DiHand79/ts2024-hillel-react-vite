@@ -30,9 +30,7 @@ function App() {
   };
 
   const handleEdit = (todo: ITodo) => {
-    console.log('Click edit ', todo);
     setTodoEdit(todo);
-    // handleTodoUpdate(todo);
   };
 
   const handleTodoUpdate = (todo: ITodo) => {
